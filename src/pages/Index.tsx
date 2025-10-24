@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -33,6 +33,35 @@ const Index = () => {
 
   const [reserveName, setReserveName] = useState('');
   const [selectedGiftId, setSelectedGiftId] = useState<number | null>(null);
+  
+  const dueDate = new Date('2025-03-15T00:00:00');
+  const [timeLeft, setTimeLeft] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0
+  });
+
+  useEffect(() => {
+    const calculateTimeLeft = () => {
+      const now = new Date();
+      const difference = dueDate.getTime() - now.getTime();
+      
+      if (difference > 0) {
+        setTimeLeft({
+          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+          minutes: Math.floor((difference / 1000 / 60) % 60),
+          seconds: Math.floor((difference / 1000) % 60)
+        });
+      }
+    };
+
+    calculateTimeLeft();
+    const timer = setInterval(calculateTimeLeft, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   const handleReserve = (giftId: number) => {
     if (reserveName.trim()) {
@@ -93,6 +122,40 @@ const Index = () => {
           </div>
         </section>
 
+        <section className="py-16 px-4 max-w-5xl mx-auto animate-fade-in">
+          <h2 className="text-4xl font-bold text-center mb-8">До встречи осталось</h2>
+          <Card className="bg-gradient-to-br from-primary/5 to-accent/10 border-2 border-primary/20">
+            <CardContent className="p-8">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="text-center">
+                  <div className="bg-card rounded-2xl p-6 shadow-lg">
+                    <div className="text-4xl md:text-5xl font-bold text-primary mb-2">{timeLeft.days}</div>
+                    <div className="text-sm text-muted-foreground uppercase tracking-wide">Дней</div>
+                  </div>
+                </div>
+                <div className="text-center">
+                  <div className="bg-card rounded-2xl p-6 shadow-lg">
+                    <div className="text-4xl md:text-5xl font-bold text-primary mb-2">{timeLeft.hours}</div>
+                    <div className="text-sm text-muted-foreground uppercase tracking-wide">Часов</div>
+                  </div>
+                </div>
+                <div className="text-center">
+                  <div className="bg-card rounded-2xl p-6 shadow-lg">
+                    <div className="text-4xl md:text-5xl font-bold text-primary mb-2">{timeLeft.minutes}</div>
+                    <div className="text-sm text-muted-foreground uppercase tracking-wide">Минут</div>
+                  </div>
+                </div>
+                <div className="text-center">
+                  <div className="bg-card rounded-2xl p-6 shadow-lg">
+                    <div className="text-4xl md:text-5xl font-bold text-primary mb-2">{timeLeft.seconds}</div>
+                    <div className="text-sm text-muted-foreground uppercase tracking-wide">Секунд</div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </section>
+
         <section id="about" className="py-16 px-4 max-w-6xl mx-auto animate-fade-in">
           <h2 className="text-4xl font-bold text-center mb-12">О малыше</h2>
           <div className="grid md:grid-cols-3 gap-6">
@@ -125,6 +188,51 @@ const Index = () => {
                 <p className="text-muted-foreground">34 недельки 💫</p>
               </CardContent>
             </Card>
+          </div>
+        </section>
+
+        <section className="py-16 px-4 max-w-6xl mx-auto animate-fade-in">
+          <h2 className="text-4xl font-bold text-center mb-4">Наши особенные моменты</h2>
+          <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
+            Фотографии с УЗИ — первые снимки нашего малыша 💕
+          </p>
+          <div className="grid md:grid-cols-3 gap-6 mb-16">
+            <div className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all">
+              <img 
+                src="https://cdn.poehali.dev/projects/afdca65d-4f90-48b8-aa99-a9bd52176adc/files/e92b7ec7-7522-49b7-b268-8169892a028f.jpg"
+                alt="УЗИ профиль малыша"
+                className="w-full h-72 object-cover group-hover:scale-110 transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="absolute bottom-4 left-4 text-white">
+                  <p className="text-sm font-medium">Профиль малыша</p>
+                </div>
+              </div>
+            </div>
+            <div className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all">
+              <img 
+                src="https://cdn.poehali.dev/projects/afdca65d-4f90-48b8-aa99-a9bd52176adc/files/45c3d66f-80de-4b03-aaaf-b45eb3a3c8fa.jpg"
+                alt="УЗИ ножки малыша"
+                className="w-full h-72 object-cover group-hover:scale-110 transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="absolute bottom-4 left-4 text-white">
+                  <p className="text-sm font-medium">Крошечные ножки</p>
+                </div>
+              </div>
+            </div>
+            <div className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all">
+              <img 
+                src="https://cdn.poehali.dev/projects/afdca65d-4f90-48b8-aa99-a9bd52176adc/files/1986c4b2-24ed-4af0-a037-e77a7ee10157.jpg"
+                alt="УЗИ ручка малыша"
+                className="w-full h-72 object-cover group-hover:scale-110 transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="absolute bottom-4 left-4 text-white">
+                  <p className="text-sm font-medium">Нежная ручка</p>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
